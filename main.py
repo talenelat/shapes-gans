@@ -133,8 +133,8 @@ if __name__ == '__main__':
         discriminator.apply(weights_init)
     
     elif network == 'vae':
-        encoder = VAE.Encoder(nc=nc, nz=nz, image_size=image_size, cuda=cuda).to(device)
-        decoder = VAE.Decoder(nc=nc, nz=nz, image_size=image_size).to(device)
+        encoder = VAE.Encoder(nc=nc, nz=nz, image_size=image_size, cuda=cuda, normalization=normalization).to(device)
+        decoder = VAE.Decoder(nc=nc, nz=nz, image_size=image_size, normalization=normalization).to(device)
         
     elif network == 'dcvae':
         encoder = DCVAE.Encoder(nc=nc, nz=nz, ndf=ndf, image_size=image_size, cuda=cuda).to(device)

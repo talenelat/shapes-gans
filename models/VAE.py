@@ -4,24 +4,27 @@ import torchvision
 
 
 class Encoder(nn.Module):
-    def __init__(self, nc, nz, image_size, cuda):
+    def __init__(self, nc, nz, image_size, cuda=False, normalization=False):
         super(Encoder, self).__init__()
 
         self.nc = nc
         self.nz = nz
         self.image_size = image_size
         self.cuda = cuda
+        self.normalization = normalization
 
         # Input: (nc * image_size * image_size)
         
         self.enc_fc1 = nn.Linear(self.nc * self.image_size * self.image_size,
                                  self.nc * self.image_size * self.image_size // 2)
         self.enc_lrelu1 = nn.LeakyReLU(0.2, inplace=True)
+        self.enc_bn1 = nn.BatchNorm1d(self.nc * self.image_size * self.image_size // 2)
         # Output: (nc * image_size * image_size // 2)
 
         self.enc_fc2 = nn.Linear(self.nc * self.image_size * self.image_size // 2,
                                  self.nc * self.image_size * self.image_size // 4)
         self.enc_lrelu2 = nn.LeakyReLU(0.2, inplace=True)
+        self.enc_bn2 = nn.BatchNorm1d(self.nc * self.image_size * self.image_size // 4)
         # Output: (nc * image_size * image_size // 4)
 
         self.enc_fc_mu = nn.Linear(self.nc * self.image_size * self.image_size // 4, self.nz)
@@ -39,8 +42,12 @@ class Encoder(nn.Module):
 
     def forward(self, image):
         image = image.view(-1, self.nc * self.image_size * self.image_size)
-        e1 = self.enc_lrelu1(self.enc_fc1(image))
-        e2 = self.enc_lrelu2(self.enc_fc2(e1))
+        if self.normalization == True:
+            e1 = self.enc_bn1(self.enc_lrelu1(self.enc_fc1(image)))
+            e2 = self.enc_bn2(self.enc_lrelu2(self.enc_fc2(e1)))
+        else:
+            e1 = self.enc_lrelu1(self.enc_fc1(image))
+            e2 = self.enc_lrelu2(self.enc_fc2(e1))
         mu = self.enc_fc_mu(e2)
         logvar = self.enc_fc_log(e2)
         z = self.calculate_z(mu=mu, logvar=logvar)
@@ -48,12 +55,13 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, nz, nc, image_size):
+    def __init__(self, nz, nc, image_size, normalization=False):
         super(Decoder, self).__init__()
 
         self.nc = nc
         self.nz = nz
         self.image_size = image_size
+        self.normalization = normalization
 
         # Input: (nz)
 
@@ -69,6 +77,9 @@ class Decoder(nn.Module):
         # Output: (self.nc * self.image_size * self.image_size)
 
     def forward(self, z):
-        d1 = self.dec_bn1(self.dec_sig1(self.dec_fc1(z)))
+        if self.normalization == True:
+            d1 = self.dec_bn1(self.dec_sig1(self.dec_fc1(z)))
+        else:
+            d1 = self.dec_sig1(self.dec_fc1(z))
         d2 = self.dec_sig(self.dec_fc2(d1))
         return d2
