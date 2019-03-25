@@ -22,7 +22,7 @@ import torch.backends.cudnn as cudnn
 
 
 class EncoderCNN(nn.Module):
-    def __init__(self, embed_size, vocab_size, nc, ndf, image_size):
+    def __init__(self, embed_size, vocab_size, nc, ndf, image_size, normalization=False):
         super(EncoderCNN, self).__init__()
         
         self.nc = nc
@@ -30,29 +30,38 @@ class EncoderCNN(nn.Module):
         self.vocab_size = vocab_size
         self.embed_size = embed_size
         self.image_size = image_size
+        self.normalization = normalization
 
         # Input: (nc x image_size x image_size)
         
         self.enc_lin1 = nn.Linear(self.nc * self.image_size * self.image_size,
                                   self.nc * self.image_size * self.image_size // 2)
         self.enc_lrelu1 = nn.LeakyReLU(0.2, inplace=True)
+        self.enc_bn1 = nn.BatchNorm1d(self.nc * self.image_size * self.image_size // 2, momentum=0.01)
         # Output: (nc * image_size // 2 * image_size // 2)
         
         self.enc_lin2 = nn.Linear(self.nc * self.image_size * self.image_size // 2,
                                   self.nc * self.image_size * self.image_size // 4)
         self.enc_lrelu2 = nn.LeakyReLU(0.2, inplace=True)
+        self.enc_bn2 = nn.BatchNorm1d(self.nc * self.image_size * self.image_size // 4, momentum=0.01)
         # Output: (nc * image_size // 4 * image_size // 4)
         
         self.enc_lin3 = nn.Linear(self.nc * self.image_size * self.image_size // 4, out_features=self.embed_size, bias=False)
-        self.enc_bn = nn.BatchNorm1d(embed_size, momentum=0.01)
+        self.enc_bn3 = nn.BatchNorm1d(embed_size, momentum=0.01)
         # Output: (embed_size)            
 
     def forward(self, image):
         image = image.reshape(-1, self.nc * self.image_size * self.image_size)
-        e1 = self.enc_lrelu1(self.enc_lin1(image))
-        e2 = self.enc_lrelu2(self.enc_lin2(e1))
-        e2 = e2.reshape(e2.size(0), -1)
-        e3 = self.enc_bn(self.enc_lin3(e2))
+        if self.normalization == True:
+            e1 = self.enc_bn1(self.enc_lrelu1(self.enc_lin1(image)))
+            e2 = self.enc_bn2(self.enc_lrelu2(self.enc_lin2(e1)))
+            e2 = e2.reshape(e2.size(0), -1)
+            e3 = self.enc_bn3(self.enc_lin3(e2))
+        else:
+            e1 = self.enc_lrelu1(self.enc_lin1(image))
+            e2 = self.enc_lrelu2(self.enc_lin2(e1))
+            e2 = e2.reshape(e2.size(0), -1)
+            e3 = self.enc_lin3(e2)
         return e3
 
 
