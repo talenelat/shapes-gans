@@ -15,16 +15,14 @@ class Generator(nn.Module):
         # Input: (nz)
         self.gen_lin1 = nn.Linear(self.nz, 
                                  self.nc * self.image_size * self.image_size // 4)
-        if self.normalization == True:
-            self.gen_bn1 = nn.BatchNorm1d(self.nc * self.image_size * self.image_size // 4)
         self.gen_lrelu1 = nn.LeakyReLU(0.2, inplace=True)
+        self.gen_bn1 = nn.BatchNorm1d(self.nc * self.image_size * self.image_size // 4)
         # Output: (nc * image_size * image_size // 4)
 
         self.gen_lin2 = nn.Linear(self.nc * self.image_size * self.image_size // 4, 
                                   self.nc * self.image_size * self.image_size // 2)
-        if self.normalization == True:
-            self.gen_bn2 = nn.BatchNorm1d(self.nc * self.image_size * self.image_size // 2)
         self.gen_lrelu2 = nn.LeakyReLU(0.2, inplace=True)
+        self.gen_bn2 = nn.BatchNorm1d(self.nc * self.image_size * self.image_size // 2)
         # Output: (nc * image_size * image_size // 2)
 
         self.gen_lin3 = nn.Linear(self.nc * self.image_size * self.image_size // 2,
@@ -35,8 +33,8 @@ class Generator(nn.Module):
     def forward(self, z):
         z = z.view(-1, self.nz)
         if self.normalization == True:
-            g1 = self.gen_lrelu1(self.gen_bn1(self.gen_lin1(z)))
-            g2 = self.gen_lrelu2(self.gen_bn2(self.gen_lin2(g1)))
+            g1 = self.gen_bn1(self.gen_lrelu1(self.gen_lin1(z)))
+            g2 = self.gen_bn2(self.gen_lrelu2(self.gen_lin2(g1)))
         else:             
             g1 = self.gen_lrelu1(self.gen_lin1(z))
             g2 = self.gen_lrelu2(self.gen_lin2(g1))
