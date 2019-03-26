@@ -137,8 +137,8 @@ if __name__ == '__main__':
         decoder = VAE.Decoder(nc=nc, nz=nz, image_size=image_size, normalization=normalization).to(device)
         
     elif network == 'dcvae':
-        encoder = DCVAE.Encoder(nc=nc, nz=nz, ndf=ndf, image_size=image_size, cuda=cuda).to(device)
-        decoder = DCVAE.Decoder(nc=nc, nz=nz, ngf=ngf, image_size=image_size).to(device)
+        encoder = DCVAE.Encoder(nc=nc, nz=nz, ndf=ndf, image_size=image_size, cuda=cuda, normalization=normalization).to(device)
+        decoder = DCVAE.Decoder(nc=nc, nz=nz, ngf=ngf, image_size=image_size, normalization=normalization).to(device)
         #encoder.apply(weights_init)
         #decoder.apply(weights_init)
 
