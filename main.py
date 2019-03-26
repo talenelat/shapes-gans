@@ -174,8 +174,11 @@ if __name__ == '__main__':
 
 
     elif network == 'vae' or network == 'dcvae':
-        optimizer_encoder = optim.Adam(encoder.parameters(), lr=learning_rate, betas=(beta1, 0.999))
-        optimizer_decoder = optim.Adam(decoder.parameters(), lr=learning_rate, betas=(beta1, 0.999))
+        # optimizer_encoder = optim.Adam(encoder.parameters(), lr=learning_rate, betas=(beta1, 0.999))
+        # optimizer_decoder = optim.Adam(decoder.parameters(), lr=learning_rate, betas=(beta1, 0.999))
+
+        optimizer_encoder = optim.SGD(encoder.parameters(), lr=learning_rate)
+        optimizer_decoder = optim.SGD(decoder.parameters(), lr=learning_rate)
 
         criterion = nn.BCELoss() # TODO: Try others too
 
