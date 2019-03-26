@@ -20,17 +20,17 @@ class Encoder(nn.Module):
         # Input: (nc x image_size x image_size)
 
         self.enc_cv1 = nn.Conv2d(self.nc, self.ndf, 4, 2, 1)
-        self.enc_le1 = nn.LeakyReLU(0.2, inplace=True)
+        self.enc_le1 = nn.LeakyReLU(inplace=True)
         self.enc_bn1 = nn.BatchNorm2d(self.ndf)
         # Output: (ndf x image_size // 2 x image_size // 2)
 
         self.enc_cv2 = nn.Conv2d(self.ndf, self.ndf*2, 4, 2, 1)
-        self.enc_le2 = nn.LeakyReLU(0.2, inplace=True)
+        self.enc_le2 = nn.LeakyReLU(inplace=True)
         self.enc_bn2 = nn.BatchNorm2d(self.ndf*2)
         # Output: (2*ndf x image_size // 4 x image_size // 4)
 
         self.enc_cv3 = nn.Conv2d(self.ndf*2, self.ndf*4, 4, 2, 1)
-        self.enc_le3 = nn.LeakyReLU(0.2, inplace=True)
+        self.enc_le3 = nn.LeakyReLU(inplace=True)
         self.enc_bn3 = nn.BatchNorm2d(self.ndf*4)
         # Output: (4*ndf x image_size // 8 x image_size // 8)
 
@@ -78,17 +78,17 @@ class Decoder(nn.Module):
         # Input: (nz)
 
         self.dec_ln1 = nn.Linear(self.nz, 4*self.ngf * self.image_size // 8 * self.image_size // 8)
-        self.dec_lrelu1 = nn.LeakyReLU(0.2, inplace=True)
+        self.dec_lrelu1 = nn.LeakyReLU(inplace=True)
         # -> Transform
         # Output: (4*ngf * image_size // 8 * image_size // 8)
         
         self.dec_ct1 = nn.ConvTranspose2d(4*self.ngf, 2*self.ngf, 4, 2, 1)
-        self.dec_lrelu2 = nn.LeakyReLU(0.2, inplace=True)
+        self.dec_lrelu2 = nn.LeakyReLU(inplace=True)
         self.dec_bn1 = nn.BatchNorm2d(2*self.ngf)
         # Output: (2*ngf * image_size // 4 * image_size // 4)
        
         self.dec_ct2 = nn.ConvTranspose2d(2*self.ngf, self.ngf, 4, 2, 1)
-        self.dec_lrelu3 = nn.LeakyReLU(0.2, inplace=True)
+        self.dec_lrelu3 = nn.LeakyReLU(inplace=True)
         self.dec_bn2 = nn.BatchNorm2d(self.ngf, 1.e-3)
         # Output: (ngf * image_size // 2 * image_size // 2)
         
