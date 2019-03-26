@@ -51,7 +51,7 @@ class Encoder(nn.Module):
         if self.normalization == True:
             e1 = self.enc_bn1(self.enc_le1(self.enc_cv1(image)))
             e2 = self.enc_bn2(self.enc_le2(self.enc_cv2(e1)))
-            e3 = self.enc_bn3(self.enc_le3(self.enc_cv3(e2)))
+            e3 = self.enc_le3(self.enc_cv3(e2))
         else:
             e1 = self.enc_le1(self.enc_cv1(image))
             e2 = self.enc_le2(self.enc_cv2(e1))
