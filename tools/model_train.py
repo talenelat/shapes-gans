@@ -211,10 +211,10 @@ def train_VAE(num_epochs, dataloader, batch_size,
 def loss_function(recon_x, x, mu, logvar):
     reconstruction_function = nn.BCELoss()
     reconstruction_function.size_average = False
-    #scaling_factor = recon_x.shape[0]*recon_x.shape[1]*recon_x.shape[2]*recon_x.shape[3]
+    scaling_factor = recon_x.shape[0]*recon_x.shape[1]*recon_x.shape[2]*recon_x.shape[3]
     BCE = reconstruction_function(recon_x, x)
     KLD_element = mu.pow(2).add_(logvar.exp()).mul_(-1).add_(1).add_(logvar)
     KLD = torch.sum(KLD_element).mul_(-0.5)
-    #KLD /= scaling_factor
+    KLD /= scaling_factor
 
     return BCE + KLD
