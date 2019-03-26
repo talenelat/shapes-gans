@@ -153,7 +153,7 @@ def train_VAE(num_epochs, dataloader, batch_size,
               nz, nc, image_size,  
               encoder, decoder,
               optimizer_encoder, optimizer_decoder,
-              criterion, output_folder, device):
+              criterion, output_folder, device, kld=False):
 
     # Fixed Latent Input to check evolution in time
     fixed_noise = torch.randn(batch_size, nz, device=device)
@@ -180,7 +180,6 @@ def train_VAE(num_epochs, dataloader, batch_size,
             
             # Evaluate the performance of the system by comparing
             # the generated/'fake' images with the real ones
-            kld = False
             if kld == True:
                 loss = loss_function(fake_images, real_images, mu, logvar)
             else:

@@ -51,6 +51,7 @@ if __name__ == '__main__':
     parser.add_argument('--beta1', type=float, default=0.5, help='beta1 for adam. default=0.5')
     parser.add_argument('--labelNoise', action='store_true', help='add random noise to the value of labels')
     parser.add_argument('--normalization', action='store_true', help='add batch normalization')
+    parser.add_argument('--kld', action='store_true', help='criterion: KL divergence')
     parser.add_argument('--cuda', action='store_true', help='enables cuda')
 
     parser.add_argument('--generator', default='', help="location of Generator model (to continue training)")
@@ -85,7 +86,8 @@ if __name__ == '__main__':
     learning_rate = args.learningRate
     beta1 = args.beta1
     
-    normalization=args.normalization
+    normalization = args.normalization
+    kld = args.kld
     label_noise = args.labelNoise
     output_folder = args.outf
     
@@ -182,4 +184,4 @@ if __name__ == '__main__':
                   encoder=encoder, decoder=decoder,
                   criterion=criterion, 
                   optimizer_encoder=optimizer_encoder, optimizer_decoder=optimizer_decoder,
-                  output_folder=output_folder, device=device)
+                  output_folder=output_folder, device=device, kld=kld)
