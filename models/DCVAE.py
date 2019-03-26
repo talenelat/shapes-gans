@@ -60,9 +60,9 @@ class Encoder(nn.Module):
 
         mu = self.enc_fc_mu(e3)
         logvar = self.enc_fc_log(e3)
-
         z = self.calculate_z(mu=mu, logvar=logvar)
-        return z
+        
+        return z, mu, logvar
 
 
 class Decoder(nn.Module):
