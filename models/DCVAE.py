@@ -56,7 +56,7 @@ class Encoder(nn.Module):
             e1 = self.enc_le1(self.enc_cv1(image))
             e2 = self.enc_le2(self.enc_cv2(e1))
             e3 = self.enc_le3(self.enc_cv3(e2))
-        e3 = e3.view(-1, self.ndf*4*4*4)
+        e3 = e3.view(-1, (self.ndf*4) * (self.image_size//8) * (self.image_size//8))
 
         mu = self.enc_fc_mu(e3)
         logvar = self.enc_fc_log(e3)
@@ -94,7 +94,7 @@ class Decoder(nn.Module):
         
         self.dec_ct3 = nn.ConvTranspose2d(self.ngf, self.nc, 4, 2, 1)
         self.sigmoid = nn.Sigmoid()
-        # Output: (ngf x image_size x image_size)
+        # Output: (nc x image_size x image_size)
 
     def forward(self, z):
         d1 = self.dec_lrelu1(self.dec_ln1(z))
