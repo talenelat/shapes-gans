@@ -98,7 +98,7 @@ class Decoder(nn.Module):
 
     def forward(self, z):
         d1 = self.dec_lrelu1(self.dec_ln1(z))
-        d1 = d1.view(-1, self.ngf*4, 4, 4)
+        d1 = d1.view(-1, (self.ngf*4), (self.image_size // 8), (self.image_size // 8))
         if self.normalization == True:
             d2 = self.dec_bn1(self.dec_lrelu2(self.dec_ct1(d1)))
             d3 = self.dec_bn2(self.dec_lrelu3(self.dec_ct2(d2)))
