@@ -82,4 +82,5 @@ class Decoder(nn.Module):
         else:
             d1 = self.dec_sig1(self.dec_fc1(z))
         d2 = self.dec_sig(self.dec_fc2(d1))
+        d2 = d2.view(-1, self.nc, self.image_size, self.image_size)
         return d2

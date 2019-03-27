@@ -94,7 +94,7 @@ class Decoder(nn.Module):
         
         self.dec_ct3 = nn.ConvTranspose2d(self.ngf, self.nc, 4, 2, 1)
         self.sigmoid = nn.Sigmoid()
-        # Output: (ngf x image_size x image_size)
+        # Output: (nc x image_size x image_size)
 
     def forward(self, z):
         d1 = self.dec_lrelu1(self.dec_ln1(z))
