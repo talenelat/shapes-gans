@@ -174,6 +174,8 @@ if __name__ == '__main__':
 
 
     elif network == 'vae' or network == 'dcvae':
+        print(encoder)
+        print(decoder)
         optimizer_encoder = optim.Adam(encoder.parameters(), lr=learning_rate, betas=(beta1, 0.999))
         optimizer_decoder = optim.Adam(decoder.parameters(), lr=learning_rate, betas=(beta1, 0.999))
 
