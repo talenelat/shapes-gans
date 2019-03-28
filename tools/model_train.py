@@ -159,7 +159,7 @@ def train_VAE(num_epochs, dataloader, batch_size,
               criterion, output_folder, device, kld=False):
 
     # Fixed Latent Input to check evolution in time
-    fixed_noise = torch.randn(1, nz, device=device)
+    fixed_noise = torch.randn(batch_size, nz, device=device)
 
     train_loss = 0
     losses = []
@@ -202,7 +202,7 @@ def train_VAE(num_epochs, dataloader, batch_size,
             if i % 10 == 0 and i != len(dataloader):
                 decoder.eval()
                 fake_fixed = decoder(fixed_noise)
-                vutils.save_image(fake_fixed.view(1, nc, image_size, image_size),
+                vutils.save_image(fake_fixed.view(batch_size, nc, image_size, image_size),
                                   '%s/gen_samples_epoch_%03d_%03d.png' 
                                   % (output_folder, epoch+1, i+1),
                                   normalize=True)
