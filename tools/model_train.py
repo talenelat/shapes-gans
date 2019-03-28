@@ -202,7 +202,7 @@ def train_VAE(num_epochs, dataloader, batch_size,
             if i % 10 == 0 and i != len(dataloader):
                 decoder.eval()
                 fake_fixed = decoder(fixed_noise)
-                vutils.save_image(fake_fixed.view(batch_size, nc, image_size, image_size),
+                vutils.save_image(fake_fixed.view(1, nc, image_size, image_size),
                                   '%s/gen_samples_epoch_%03d_%03d.png' 
                                   % (output_folder, epoch+1, i+1),
                                   normalize=True)
