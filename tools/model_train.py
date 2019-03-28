@@ -137,7 +137,7 @@ def train_GAN(num_epochs, dataloader, batch_size,
 
             # Save batch of fake images (fixed noise to observe evolution over time)
             if i % 10 == 0:
-                fake_fixed = generator(fixed_noise)
+                fake_fixed = generator(fixed_noise[0])
                 vutils.save_image(fake_fixed.detach(),
                                   '%s/gen_samples_epoch_%03d_%03d.png' % (output_folder, epoch+1, i),
                                   normalize=True)
@@ -195,7 +195,7 @@ def train_VAE(num_epochs, dataloader, batch_size,
             print('[Epoch %d of %d][Batch %d of %d] -> Loss: %.4f'
                   % (epoch+1, num_epochs, i, len(dataloader), loss.item()))
             if i % 10 == 0 and i != len(dataloader):
-                fake_fixed = decoder(fixed_noise)
+                fake_fixed = decoder(fixed_noise[0])
                 vutils.save_image(fake_fixed.view(batch_size, nc, image_size, image_size),
                                   '%s/gen_samples_epoch_%03d_%03d.png' 
                                   % (output_folder, epoch+1, i+1),
