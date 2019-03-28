@@ -59,12 +59,14 @@ def train_GAN(num_epochs, dataloader, batch_size,
     gen_losses = []
     disc_losses = []
     
-    discriminator.train()
-    generator.train()
+    
 
     for epoch in range(num_epochs):
         for i, data in enumerate(dataloader, 1):
             
+            discriminator.train()
+            generator.train()
+
             ### Train Discriminator: maximize log(D(x)) + log(1 - D(G(z)))
 
             # Set gradients of the Discriminator to 0 
@@ -137,6 +139,7 @@ def train_GAN(num_epochs, dataloader, batch_size,
 
             # Save batch of fake images (fixed noise to observe evolution over time)
             if i % 10 == 0:
+                generator.eval()
                 fake_fixed = generator(fixed_noise)
                 vutils.save_image(fake_fixed.detach(),
                                   '%s/gen_samples_epoch_%03d_%03d.png' % (output_folder, epoch+1, i),
