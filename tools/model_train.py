@@ -166,6 +166,8 @@ def train_VAE(num_epochs, dataloader, batch_size,
 
     for epoch in range(num_epochs):
         for i, data in enumerate(dataloader, 1):
+            encoder.train()
+            decoder.train()
 
             # Set the gradients of the Encoder and Decoder to 0
             optimizer_encoder.zero_grad()
@@ -198,6 +200,7 @@ def train_VAE(num_epochs, dataloader, batch_size,
             print('[Epoch %d of %d][Batch %d of %d] -> Loss: %.4f'
                   % (epoch+1, num_epochs, i, len(dataloader), loss.item()))
             if i % 10 == 0 and i != len(dataloader):
+                decoder.eval()
                 fake_fixed = decoder(fixed_noise)
                 vutils.save_image(fake_fixed.view(batch_size, nc, image_size, image_size),
                                   '%s/gen_samples_epoch_%03d_%03d.png' 
