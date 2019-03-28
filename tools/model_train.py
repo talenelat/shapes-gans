@@ -50,7 +50,7 @@ def train_GAN(num_epochs, dataloader, batch_size,
               criterion, nz, device, label_noise, output_folder):
 
     # Fixed Latent Input to check evolution in time
-    fixed_noise = torch.randn(1, nz, 1, 1, device=device)
+    fixed_noise = torch.randn(batch_size, nz, 1, 1, device=device)
 
     # Labels for the real images (=1) and generated/'fake' images (=0)
     real_label = 1
