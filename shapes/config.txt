@@ -1,0 +1,9 @@
+{
+	"colour_list" : ["red", "green", "blue", "yellow", "black", "white", "magenta", "purple"],
+	"no_of_images" : 10,
+	"height" : 300,
+	"width" : 300,
+	"sharding" : 2,
+	"background" : true,
+	"offset": 20
+}
